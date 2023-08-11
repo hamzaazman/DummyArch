@@ -7,7 +7,7 @@
     android:paddingVertical="16dp">
 
     <ProgressBar
-        android:id="@+id/launchLoaderBar"
+        android:id="@+id/loader_bar"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:indeterminate="true"
@@ -16,22 +16,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/launchErrorMessage"
+        android:id="@+id/error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/launchLoaderBar"
-        app:layout_constraintStart_toStartOf="@+id/launchLoaderBar"
-        app:layout_constraintTop_toBottomOf="@+id/launchLoaderBar"
+        app:layout_constraintEnd_toEndOf="@+id/loader_bar"
+        app:layout_constraintStart_toStartOf="@+id/loader_bar"
+        app:layout_constraintTop_toBottomOf="@+id/loader_bar"
         tools:text="No Internet Connection" />
 
     <Button
-        android:id="@+id/launchRetryButton"
+        android:id="@+id/retry_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Retry"
-        app:layout_constraintEnd_toEndOf="@+id/launchErrorMessage"
-        app:layout_constraintStart_toStartOf="@+id/launchErrorMessage"
-        app:layout_constraintTop_toBottomOf="@+id/launchErrorMessage" />
+        app:layout_constraintEnd_toEndOf="@+id/error_message"
+        app:layout_constraintStart_toStartOf="@+id/error_message"
+        app:layout_constraintTop_toBottomOf="@+id/error_message" />
 </androidx.constraintlayout.widget.ConstraintLayout>

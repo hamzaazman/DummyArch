@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.hamzaazman.trendyolarch'
+    namespace 'com.hamzaazman.dummyarch'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.hamzaazman.trendyolarch"
+        applicationId "com.hamzaazman.dummyarch"
         minSdk 24
         targetSdk 33
         versionCode 1

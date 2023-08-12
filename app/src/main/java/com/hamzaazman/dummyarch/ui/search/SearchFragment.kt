@@ -3,15 +3,12 @@ package com.hamzaazman.dummyarch.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.hamzaazman.dummyarch.R
 import com.hamzaazman.dummyarch.common.viewBinding
 import com.hamzaazman.dummyarch.data.local.RecentSearch
@@ -42,7 +39,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.O
         activity?.actionBar?.hide()
 
         setView()
-
         collectRecentSearch()
 
         with(binding) {
@@ -76,7 +72,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.O
         viewLifecycleOwner.lifecycleScope.launch {
             vm.readRecentSearch.distinctUntilChanged().collect {
                 recentAdapter.differ.submitList(it)
-                Log.d("DATASTORE", "onViewCreated: $it")
             }
         }
     }
@@ -87,16 +82,22 @@ class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.O
                 .collectLatest {
                     when (it) {
                         is SearchUiState.Error -> {
+                            binding.loadingBarSearch.visibility = View.GONE
                             Toast.makeText(requireContext(), it.error.message, Toast.LENGTH_SHORT)
                                 .show()
+                            binding.searchRv.visibility = View.GONE
                         }
 
-                        SearchUiState.Loading -> {
-                            binding.searchBar.isOnLoadAnimationFadeInEnabled
+                        is SearchUiState.Loading -> {
+                            if (it.isLoading) {
+                                binding.searchRv.visibility = View.GONE
+                                binding.loadingBarSearch.visibility = View.VISIBLE
+                            }
                         }
 
                         is SearchUiState.Success -> {
-                            Log.d("Arama", "onViewCreated: ${it.data}")
+                            binding.loadingBarSearch.visibility = View.GONE
+                            binding.searchRv.visibility = View.VISIBLE
                             searchAdapter.submitList(it.data)
                         }
                     }
@@ -107,9 +108,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.O
     private fun setView() = with(binding) {
         searchRv.adapter = searchAdapter
         recentSearchRv.adapter = recentAdapter
-        recentSearchRv.addItemDecoration(
-            DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
-        )
     }
 
     companion object {
@@ -124,7 +122,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.O
         }
         binding.searchBar.text = recent.query
         binding.searchView.hide()
-        Toast.makeText(requireContext(), recent.query, Toast.LENGTH_SHORT).show()
     }
 
     override fun deleteSearchItem(recent: RecentSearch) {

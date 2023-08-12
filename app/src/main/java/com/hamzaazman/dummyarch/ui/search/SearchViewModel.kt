@@ -10,7 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +25,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _searchProductState: MutableStateFlow<SearchUiState> =
-        MutableStateFlow(SearchUiState.Loading)
+        MutableStateFlow(SearchUiState.Loading(isLoading = false))
     val searchProductState: StateFlow<SearchUiState> get() = _searchProductState.asStateFlow()
 
     suspend fun addRecentSearch(query: String) = viewModelScope.launch {
@@ -38,7 +40,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    val readRecentSearch = searchDataStore.recentSearchesFlow
+    val readRecentSearch = searchDataStore.recentSearchesFlow.distinctUntilChanged()
 
 
     suspend fun getProductsBySearch(query: String) {
@@ -49,7 +51,7 @@ class SearchViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {
-                    _searchProductState.value = SearchUiState.Loading
+                    _searchProductState.value = SearchUiState.Loading(isLoading = true)
                 }
 
                 is Resource.Success -> {

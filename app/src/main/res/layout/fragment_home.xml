@@ -14,14 +14,21 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:titleTextAppearance="@style/TextAppearance.Material3.ActionBar.Title"
             app:title="Home" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/product_rv"

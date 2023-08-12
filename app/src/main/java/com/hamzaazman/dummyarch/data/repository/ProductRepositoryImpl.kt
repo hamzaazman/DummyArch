@@ -47,8 +47,8 @@ class ProductRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProductBySearch(query: String): Flow<Resource<ProductResponse>> = flow {
-        emit(Resource.Loading())
         try {
+            emit(Resource.Loading())
             val response = productService.getProductBySearch(query)
             emit(Resource.Success(data = response))
         } catch (e: Throwable) {

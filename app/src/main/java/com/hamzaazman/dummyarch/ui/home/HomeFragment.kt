@@ -2,6 +2,7 @@ package com.hamzaazman.dummyarch.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,29 +33,37 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
             }
         }
-/*
-        lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.collectLatest { loadState ->
-                binding.swipeRefresh.isRefreshing = loadState.refresh is LoadState.Loading
-            }
-        }
-
-        binding.swipeRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                vm.fetchAllProductByPaging().collect {
-                    pagingAdapter.submitData(it)
+        /*
+                lifecycleScope.launch {
+                    pagingAdapter.loadStateFlow.collectLatest { loadState ->
+                        binding.swipeRefresh.isRefreshing = loadState.refresh is LoadState.Loading
+                    }
                 }
+
+                binding.swipeRefresh.setOnRefreshListener {
+                    lifecycleScope.launch {
+                        vm.fetchAllProductByPaging().collect {
+                            pagingAdapter.submitData(it)
+                        }
+                    }
+                    binding.swipeRefresh.isRefreshing = false
+                }
+
+         */
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            pagingAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.loadingBar.isVisible = loadStates.refresh is LoadState.Loading
             }
-            binding.swipeRefresh.isRefreshing = false
         }
 
- */
-
-        lifecycleScope.launch {
-            vm.fetchAllProductByPaging().collect {
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.fetchAllProductByPaging().collectLatest {
                 pagingAdapter.submitData(it)
             }
         }
+
 
     }
 

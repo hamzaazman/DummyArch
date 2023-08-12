@@ -9,6 +9,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.hamzaazman.dummyarch.data.local.RecentSearchDataStore.PreferencesKeys.RECENT_SEARCHES
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class RecentSearchDataStore @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "recent_searches")
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "recent_searches")
 
     val recentSearchesFlow: Flow<List<RecentSearch>> = context.dataStore.data
         .map { preferences ->
@@ -26,7 +27,7 @@ class RecentSearchDataStore @Inject constructor(
             searchList.split(",")
                 .filter { it.isNotBlank() }
                 .map { RecentSearch(it) }
-        }
+        }.distinctUntilChanged()
 
     suspend fun addRecentSearch(query: String) {
         context.dataStore.edit { preferences ->

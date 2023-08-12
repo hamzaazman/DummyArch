@@ -11,4 +11,6 @@ interface ProductRepository {
     suspend fun getProducts(): Flow<Resource<ProductResponse>>
 
     fun getAllProductByPaging(): Flow<PagingData<Product>>
+
+    suspend fun getProductBySearch(query: String): Flow<Resource<ProductResponse>>
 }

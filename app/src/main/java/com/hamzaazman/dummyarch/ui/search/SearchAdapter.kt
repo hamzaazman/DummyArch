@@ -1,4 +1,4 @@
-package com.hamzaazman.dummyarch.ui
+package com.hamzaazman.dummyarch.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,8 +10,7 @@ import com.hamzaazman.dummyarch.R
 import com.hamzaazman.dummyarch.databinding.ProductRowItemBinding
 import com.hamzaazman.dummyarch.domain.model.ProductUiModel
 
-
-class MainAdapter : ListAdapter<ProductUiModel, MainAdapter.ViewHolder>(DiffCallback()) {
+class SearchAdapter : ListAdapter<ProductUiModel, SearchAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -30,16 +29,16 @@ class MainAdapter : ListAdapter<ProductUiModel, MainAdapter.ViewHolder>(DiffCall
 
     inner class ViewHolder(private val binding: ProductRowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun bind(product: ProductUiModel) = with(binding) {
+            println(product)
 
-        fun bind(productUiModel: ProductUiModel) = with(binding) {
-            productTitle.text = bindProductTitle(productUiModel.title)
-            productDesc.text = productUiModel.description
+            productTitle.text = bindProductTitle(product.title)
+            productDesc.text = product.description
 
             Glide.with(binding.root.context)
-                .load(productUiModel.thumbnail)
+                .load(product.thumbnail)
                 .placeholder(R.drawable.placeholder)
                 .into(productImage)
-
         }
 
         private fun bindProductTitle(text: String?): String? {

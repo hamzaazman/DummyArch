@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
     private val productService: ProductService,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ProductRepository {
 
     override suspend fun getProducts() = flow<Resource<ProductResponse>> {
@@ -33,12 +32,12 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }.catch { e ->
         emit(Resource.Error(e.fillInStackTrace()))
-    }.flowOn(ioDispatcher)
+    }
 
     override fun getAllProductByPaging(): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = 15,
                 enablePlaceholders = true
             ),
             pagingSourceFactory = {
@@ -46,5 +45,18 @@ class ProductRepositoryImpl @Inject constructor(
             }
         ).flow
     }
+
+    override suspend fun getProductBySearch(query: String): Flow<Resource<ProductResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = productService.getProductBySearch(query)
+            emit(Resource.Success(data = response))
+        } catch (e: Throwable) {
+            emit(Resource.Error(e))
+        }
+    }.catch { e ->
+        emit(Resource.Error(e.fillInStackTrace()))
+    }
+
 
 }

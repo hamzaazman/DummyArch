@@ -1,54 +1,61 @@
 package com.hamzaazman.dummyarch.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.hamzaazman.dummyarch.R
 import com.hamzaazman.dummyarch.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val vm: MainViewModel by viewModels()
-    private val pagingAdapter by lazy { MainPagingAdapter() }
+    private lateinit var navController: NavController
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.productRv.apply {
-            adapter = with(pagingAdapter) {
-                withLoadStateHeaderAndFooter(
-                    header = LoaderAdapter(this), footer = LoaderAdapter(this),
-                )
-            }
-        }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHostFragment.navController
 
-        lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.collectLatest { loadState ->
-                binding.swipeRefresh.isRefreshing = loadState.refresh is LoadState.Loading
-            }
-        }
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setupWithNavController(navController)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.searchFragment,
+            )
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.swipeRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                vm.fetchAllProductByPaging().collect {
-                    pagingAdapter.submitData(it)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment -> {
+                    supportActionBar?.hide()
                 }
-            }
-            binding.swipeRefresh.isRefreshing = false
-        }
 
-        lifecycleScope.launch {
-            vm.fetchAllProductByPaging().collect {
-                pagingAdapter.submitData(it)
+                R.id.searchFragment -> {
+                    supportActionBar?.hide()
+                }
+
             }
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return super.onSupportNavigateUp() || navController.navigateUp(appBarConfiguration)
     }
 }

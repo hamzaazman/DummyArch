@@ -1,4 +1,4 @@
-package com.hamzaazman.dummyarch.ui
+package com.hamzaazman.dummyarch.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

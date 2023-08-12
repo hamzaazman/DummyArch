@@ -10,14 +10,12 @@ import com.hamzaazman.dummyarch.common.StatusViewState
 import com.hamzaazman.dummyarch.data.model.Product
 import com.hamzaazman.dummyarch.data.repository.ProductRepositoryImpl
 import com.hamzaazman.dummyarch.domain.model.ProductUiModel
-import com.hamzaazman.dummyarch.domain.usecase.GetAllProductByPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getAllProductByPagingUseCase: GetAllProductByPagingUseCase,
     private val repository: ProductRepositoryImpl
 ) : ViewModel() {
 

@@ -9,11 +9,19 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/searchbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <!-- Screen content goes here. -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/product_row_item" />
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,10 +41,10 @@
         <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchRv"
+            android:id="@+id/recentSearchRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/product_row_item" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
     </com.google.android.material.search.SearchView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

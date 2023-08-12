@@ -5,14 +5,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hamzaazman.dummyarch.R
 import com.hamzaazman.dummyarch.common.viewBinding
+import com.hamzaazman.dummyarch.data.local.RecentSearch
 import com.hamzaazman.dummyarch.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.awaitClose
@@ -29,27 +31,30 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment(R.layout.fragment_search), RecentSearchAdapter.OnItemClickListener {
     private val vm: SearchViewModel by viewModels()
     private val binding by viewBinding(FragmentSearchBinding::bind)
     private val searchAdapter by lazy { SearchAdapter() }
+    private val recentAdapter by lazy { RecentSearchAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.actionBar?.hide()
 
+        setView()
+
+        collectRecentSearch()
+
         with(binding) {
-
-            searchRv.adapter = searchAdapter
-
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
                 searchBar.text = searchView.text
+                viewLifecycleOwner.lifecycleScope.launch {
+                    searchView.text?.let { vm.addRecentSearch(it.toString()) }
+                }
                 searchView.hide()
-                searchAdapter.currentList.clear()
-                searchAdapter.submitList(emptyList())
+                searchView.editText.text.clear()
                 false
             }
-
 
             searchView
                 .editText.observeTextChanges()
@@ -63,6 +68,20 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
 
+        collectSearchQueryState()
+
+    }
+
+    private fun collectRecentSearch() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.readRecentSearch.distinctUntilChanged().collect {
+                recentAdapter.differ.submitList(it)
+                Log.d("DATASTORE", "onViewCreated: $it")
+            }
+        }
+    }
+
+    private fun collectSearchQueryState() {
         viewLifecycleOwner.lifecycleScope.launch {
             vm.searchProductState
                 .collectLatest {
@@ -73,7 +92,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                         }
 
                         SearchUiState.Loading -> {
-
+                            binding.searchBar.isOnLoadAnimationFadeInEnabled
                         }
 
                         is SearchUiState.Success -> {
@@ -83,14 +102,35 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     }
                 }
         }
+    }
 
-
+    private fun setView() = with(binding) {
+        searchRv.adapter = searchAdapter
+        recentSearchRv.adapter = recentAdapter
+        recentSearchRv.addItemDecoration(
+            DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
+        )
     }
 
     companion object {
         private const val MINIMUM_SEARCH_LENGTH = 1
         private const val SEARCH_DEBOUNCE_TIME_IN_MILLISECONDS = 300L
 
+    }
+
+    override fun onRecentSearchItem(recent: RecentSearch) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.getProductsBySearch(recent.query)
+        }
+        binding.searchBar.text = recent.query
+        binding.searchView.hide()
+        Toast.makeText(requireContext(), recent.query, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun deleteSearchItem(recent: RecentSearch) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.clearRecentBySearch(recent.query)
+        }
     }
 }
 

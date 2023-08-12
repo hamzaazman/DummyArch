@@ -4,5 +4,10 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="android:statusBarColor">@color/black</item>
+
+    </style>
+
+    <style name="RecentIconStyle">
+        <item name="android:tint">@color/primaryDark</item>
     </style>
 </resources>

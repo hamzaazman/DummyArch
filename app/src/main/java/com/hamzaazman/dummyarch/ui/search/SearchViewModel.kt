@@ -4,15 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamzaazman.dummyarch.common.Resource
 import com.hamzaazman.dummyarch.data.local.RecentSearchDataStore
-import com.hamzaazman.dummyarch.domain.usecase.GetProductBySearchUseCase
+import com.hamzaazman.dummyarch.domain.usecase.product.GetProductBySearchUseCase
+import com.hamzaazman.dummyarch.domain.usecase.search.AddRecentSearchUseCase
+import com.hamzaazman.dummyarch.domain.usecase.search.ClearRecentSearchUseCase
+import com.hamzaazman.dummyarch.domain.usecase.search.GetAllRecentSearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +22,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getProductBySearchUseCase: GetProductBySearchUseCase,
-    private val searchDataStore: RecentSearchDataStore
+    private val searchDataStore: RecentSearchDataStore,
+    getAllRecentSearchUseCase: GetAllRecentSearchUseCase,
+    private val addRecentSearchUseCase: AddRecentSearchUseCase,
+    private val clearRecentSearchUseCase: ClearRecentSearchUseCase
 ) : ViewModel() {
 
     private val _searchProductState: MutableStateFlow<SearchUiState> =
@@ -30,17 +34,17 @@ class SearchViewModel @Inject constructor(
 
     suspend fun addRecentSearch(query: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            searchDataStore.addRecentSearch(query)
+            addRecentSearchUseCase.invoke(query)
         }
     }
 
     suspend fun clearRecentBySearch(query: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            searchDataStore.clearRecentByQuery(query)
+            clearRecentSearchUseCase.invoke(query)
         }
     }
 
-    val readRecentSearch = searchDataStore.recentSearchesFlow.distinctUntilChanged()
+    val readRecentSearch = getAllRecentSearchUseCase.invoke()
 
 
     suspend fun getProductsBySearch(query: String) {

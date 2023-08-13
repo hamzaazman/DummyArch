@@ -1,4 +1,4 @@
-package com.hamzaazman.dummyarch.domain.usecase
+package com.hamzaazman.dummyarch.domain.usecase.product
 
 import com.hamzaazman.dummyarch.common.Resource
 import com.hamzaazman.dummyarch.data.model.Product

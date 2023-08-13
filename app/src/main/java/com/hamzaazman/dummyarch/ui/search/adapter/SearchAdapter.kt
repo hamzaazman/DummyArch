@@ -1,4 +1,4 @@
-package com.hamzaazman.dummyarch.ui.search
+package com.hamzaazman.dummyarch.ui.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

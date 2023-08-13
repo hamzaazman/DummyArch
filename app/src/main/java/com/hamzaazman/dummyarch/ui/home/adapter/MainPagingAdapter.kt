@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hamzaazman.dummyarch.R
-import com.hamzaazman.dummyarch.data.model.Product
 import com.hamzaazman.dummyarch.databinding.ProductRowItemBinding
+import com.hamzaazman.dummyarch.domain.model.ProductUiModel
 
 class MainPagingAdapter() :
-    PagingDataAdapter<Product, MainPagingAdapter.MainPagingViewHolder>(DiffCallBackProduct) {
+    PagingDataAdapter<ProductUiModel, MainPagingAdapter.MainPagingViewHolder>(DiffCallBackProduct) {
     class MainPagingViewHolder(private val binding: ProductRowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) = with(binding) {
+        fun bind(product: ProductUiModel) = with(binding) {
             println(product)
 
             productTitle.text = bindProductTitle(product.title)
@@ -35,12 +35,12 @@ class MainPagingAdapter() :
         }
     }
 
-    object DiffCallBackProduct : DiffUtil.ItemCallback<Product>() {
-        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+    object DiffCallBackProduct : DiffUtil.ItemCallback<ProductUiModel>() {
+        override fun areItemsTheSame(oldItem: ProductUiModel, newItem: ProductUiModel): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+        override fun areContentsTheSame(oldItem: ProductUiModel, newItem: ProductUiModel): Boolean {
             return oldItem == newItem
         }
     }

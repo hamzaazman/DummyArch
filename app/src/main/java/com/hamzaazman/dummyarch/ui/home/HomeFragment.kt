@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.hamzaazman.dummyarch.R
@@ -33,27 +35,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
             }
         }
-        /*
-                lifecycleScope.launch {
-                    pagingAdapter.loadStateFlow.collectLatest { loadState ->
-                        binding.swipeRefresh.isRefreshing = loadState.refresh is LoadState.Loading
-                    }
-                }
-
-                binding.swipeRefresh.setOnRefreshListener {
-                    lifecycleScope.launch {
-                        vm.fetchAllProductByPaging().collect {
-                            pagingAdapter.submitData(it)
-                        }
-                    }
-                    binding.swipeRefresh.isRefreshing = false
-                }
-
-         */
-
 
         viewLifecycleOwner.lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.collectLatest { loadStates ->
+            pagingAdapter.loadStateFlow.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED)
+                .collect { loadStates ->
+                    binding.productRv.isVisible = loadStates.refresh !is LoadState.Loading
                 binding.loadingBar.isVisible = loadStates.refresh is LoadState.Loading
             }
         }
@@ -63,7 +49,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 pagingAdapter.submitData(it)
             }
         }
-
 
     }
 

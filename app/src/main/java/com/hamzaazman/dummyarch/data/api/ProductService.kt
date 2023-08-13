@@ -1,6 +1,5 @@
 package com.hamzaazman.dummyarch.data.api
 
-import com.hamzaazman.dummyarch.data.model.Product
 import com.hamzaazman.dummyarch.data.model.ProductResponse
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -10,6 +10,14 @@ android {
     namespace 'com.hamzaazman.dummyarch'
     compileSdk 33
 
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
+        }
+    }
+
     defaultConfig {
         applicationId "com.hamzaazman.dummyarch"
         minSdk 24

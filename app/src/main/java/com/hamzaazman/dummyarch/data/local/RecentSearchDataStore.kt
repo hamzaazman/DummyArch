@@ -32,16 +32,12 @@ class RecentSearchDataStore @Inject constructor(
     suspend fun addRecentSearch(query: String) {
         context.dataStore.edit { preferences ->
             val currentSearches = preferences[RECENT_SEARCHES] ?: ""
-            preferences[RECENT_SEARCHES] = "$query,$currentSearches"
+            val searchList =
+                currentSearches.split(",").toMutableSet() // Convert to a set to remove duplicates
+            searchList.add(query)
+            preferences[RECENT_SEARCHES] = searchList.joinToString(",")
         }
     }
-
-    suspend fun clearRecentSearches() {
-        context.dataStore.edit { preferences ->
-            preferences[RECENT_SEARCHES] = ""
-        }
-    }
-
 
     suspend fun clearRecentByQuery(query: String) {
         context.dataStore.edit { preferences ->

@@ -9,7 +9,7 @@ https://github.com/hamzaazman/DummyArch/assets/60855026/07f9364e-672e-4c51-a0e5-
 
 # Tech Stack
 - **Paging 3**: Utilizes Paging 3 to efficiently load and display large datasets from the Dummy API.
-- **Search Bar**: Search Bar: Implements Material 3's search bar to enable users to search for specific product.
+- **Search Bar**: Implements Material 3's search bar to enable users to search for specific product.
 - **DataStore**: Utilizes DataStore to store and manage user preferences and settings.
 - **Jetpack**
   - **Flow**: Flow is conceptually a stream of data that can be computed asynchronously.

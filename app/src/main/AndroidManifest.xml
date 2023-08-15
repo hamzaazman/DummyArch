@@ -19,7 +19,7 @@
             android:name="com.hamzaazman.dummyarch.ui.FavoriteActivity"
             android:exported="false" />
         <activity
-            android:name="com.hamzaazman.dummyarch.ui.MainActivity"
+            android:name="com.hamzaazman.dummyarch.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

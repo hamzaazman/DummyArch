@@ -1,13 +1,13 @@
-package com.hamza.domain.domain.usecase.search.add
+package com.hamza.data.data.usecase
 
-import com.hamza.domain.domain.repository.SearchRepository
+import com.hamza.domain.domain.repository.DummyArchRepository
 import com.hamza.domain.domain.usecase.search.add.AddRecentSearchUseCase
 import javax.inject.Inject
 
 class AddRecentSearchUseCaseImpl @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val dummyArchRepository: DummyArchRepository
 ): AddRecentSearchUseCase {
     override suspend operator fun invoke(query: String) {
-        searchRepository.addRecentSearch(query)
+        dummyArchRepository.addRecentSearch(query)
     }
 }

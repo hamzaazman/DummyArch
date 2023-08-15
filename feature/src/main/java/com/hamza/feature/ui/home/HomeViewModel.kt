@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.hamza.domain.domain.model.ProductUiModel
+import com.hamza.common.common.model.ProductUiModel
 import com.hamza.domain.domain.usecase.product.bypaging.GetAllProductByPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

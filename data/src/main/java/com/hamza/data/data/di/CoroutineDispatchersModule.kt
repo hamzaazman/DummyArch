@@ -1,4 +1,4 @@
-package com.hamza.domain.domain.di
+package com.hamza.data.data.di
 
 import androidx.lifecycle.ViewModel
 import dagger.Module
@@ -10,13 +10,14 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object CoroutineDispatchersModule {
 
     @IoDispatcher
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun providesIoDispatcher() = Dispatchers.IO
 }

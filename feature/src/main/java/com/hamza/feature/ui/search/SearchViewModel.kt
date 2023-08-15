@@ -6,9 +6,7 @@ import com.hamza.common.common.Resource
 import com.hamza.domain.domain.usecase.product.bysearch.GetProductBySearchUseCase
 import com.hamza.domain.domain.usecase.search.add.AddRecentSearchUseCase
 import com.hamza.domain.domain.usecase.search.clear.ClearRecentSearchUseCase
-import com.hamza.domain.domain.usecase.search.clear.ClearRecentSearchUseCaseImpl
 import com.hamza.domain.domain.usecase.search.getall.GetAllRecentSearchUseCase
-import com.hamza.domain.domain.usecase.search.getall.GetAllRecentSearchUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

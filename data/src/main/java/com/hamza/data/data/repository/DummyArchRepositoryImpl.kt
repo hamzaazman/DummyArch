@@ -4,19 +4,23 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.hamza.common.common.Resource
-import com.hamza.domain.domain.repository.ProductRepository
+import com.hamza.common.common.local.RecentSearch
+import com.hamza.common.common.local.RecentSearchDataStore
 import com.hamzaazman.dummyarch.data.api.ProductService
 import com.hamza.data.data.model.Product
 import com.hamza.data.data.model.ProductResponse
 import com.hamza.data.data.paging.ProductPagingSource
+import com.hamza.domain.domain.repository.DummyArchRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ProductRepositoryImpl @Inject constructor(
+class DummyArchRepositoryImpl @Inject constructor(
     private val productService: ProductService,
-) : ProductRepository {
+    private val searchDataStore: RecentSearchDataStore
+
+) : DummyArchRepository {
 
     override suspend fun getProducts() = flow<Resource<ProductResponse>> {
         emit(Resource.Loading(null))
@@ -52,6 +56,18 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }.catch { e ->
         emit(Resource.Error(e.fillInStackTrace()))
+    }
+
+    override fun recentSearches(): Flow<List<RecentSearch>> {
+        return searchDataStore.recentSearchesFlow
+    }
+
+    override suspend fun addRecentSearch(query: String) {
+        searchDataStore.addRecentSearch(query)
+    }
+
+    override suspend fun clearRecentByQuery(query: String) {
+        searchDataStore.clearRecentByQuery(query)
     }
 
 

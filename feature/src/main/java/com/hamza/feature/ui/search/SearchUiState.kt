@@ -1,6 +1,7 @@
 package com.hamza.feature.ui.search
 
-import com.hamza.domain.domain.model.ProductUiModel
+import com.hamza.common.common.model.ProductUiModel
+
 
 sealed class SearchUiState {
     data class Loading(val isLoading: Boolean = false) : SearchUiState()

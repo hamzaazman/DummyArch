@@ -1,4 +1,4 @@
-package com.hamza.domain.domain.model
+package com.hamza.common.common.model
 
 data class ProductUiModel(
     val id: Int,

@@ -1,4 +1,4 @@
-package com.hamza.domain.domain.di
+package com.hamza.data.data.di
 
 import javax.inject.Qualifier
 

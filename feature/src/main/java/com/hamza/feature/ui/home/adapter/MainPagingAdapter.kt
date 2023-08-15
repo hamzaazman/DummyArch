@@ -6,7 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.hamza.domain.domain.model.ProductUiModel
+import com.hamza.common.common.model.ProductUiModel
 import com.hamza.feature.R
 import com.hamza.feature.databinding.ProductRowItemBinding
 

@@ -15,3 +15,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DummyArch"
 include ':app'
+include ':domain'
+include ':data'
+include ':common'
+include ':feature'

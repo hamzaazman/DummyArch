@@ -1,0 +1,13 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.DummyArch" parent="Theme.Material3.DayNight">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
+
+    </style>
+
+    <style name="RecentIconStyle">
+        <item name="android:tint">@color/primaryDark</item>
+    </style>
+</resources>

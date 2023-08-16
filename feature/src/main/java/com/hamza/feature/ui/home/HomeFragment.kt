@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import com.hamza.common.common.viewBinding
 import com.hamza.feature.R
@@ -15,13 +16,14 @@ import com.hamza.feature.databinding.FragmentHomeBinding
 import com.hamza.feature.ui.home.adapter.LoaderAdapter
 import com.hamza.feature.ui.home.adapter.MainPagingAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val vm: HomeViewModel by viewModels()
-    private val binding by viewBinding (FragmentHomeBinding::bind)
+    private val binding by viewBinding(FragmentHomeBinding::bind)
     private val pagingAdapter by lazy { MainPagingAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,19 +39,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED)
+            pagingAdapter.loadStateFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect { loadStates ->
                     binding.productRv.isVisible = loadStates.refresh !is LoadState.Loading
-                binding.loadingBar.isVisible = loadStates.refresh is LoadState.Loading
-            }
+                    binding.loadingBar.isVisible = loadStates.refresh is LoadState.Loading
+                }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            vm.fetchAllProductByPaging().collectLatest {
-                pagingAdapter.submitData(it)
+        collectLatestFlow(vm.state, stateCollector)
+    }
+
+    private val stateCollector: suspend (UiState) -> Unit = { uiState ->
+        uiState.data?.let {
+            pagingAdapter.submitData(it)
+        }
+    }
+
+    companion object {
+        fun <T> Fragment.collectLatestFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    flow.collectLatest(collect)
+                }
             }
         }
-
     }
 
 
